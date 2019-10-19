@@ -14,7 +14,7 @@ def image_data():
     file_quenue = tf.train.string_input_producer(file_list)
     #读取
     reader = tf.WholeFileReader()
-    key , value = reader.read(file_quenue)
+    key, value = reader.read(file_quenue)
     #解码
     image = tf.image.decode_jpeg(value)
     print("image", image)
