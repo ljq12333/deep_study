@@ -6,7 +6,7 @@ def linear_regression():
     """
     #1）准被数据
     with tf.variable_scope("prepare_data"):
-        x = tf.random_normal([100,1])
+        x = tf.random_normal([100, 1])
         y_true = tf.matmul(x, [[0.8]]) + 0.7
         #2）构造模型
     with tf.variable_scope("init_model"):
