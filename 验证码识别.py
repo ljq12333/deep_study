@@ -39,6 +39,8 @@ import numpy as np
         9）开启线程
     5）代码实现
 """
+def create_weights(shape):
+    return tf.Variable(tf.random_normal(shape=shape))
 
 def read_image_data():
     """
@@ -70,10 +72,9 @@ def filename_label(filenames, csv_data):
     for filename in filenames:
 
         filename_num = filename.decode().split('/')[-1].split('.')[0]
-        target = labels.append(csv_data.loc[int(filename_num), "labels"])
-        print(target)
+        labels.append(csv_data.loc[int(filename_num), "labels"])
     # return np.array(labels)
-
+    return np.array(labels)
 
 def read_csv_data():
     """
@@ -92,18 +93,42 @@ def read_csv_data():
         labels.append(tmp)
     csv_data["labels"] = labels
     return csv_data
-def dish_code():
+def create_model(x):
     """
-
+    创建模型
     :return:
     """
-    with tf.variable_scope("covn_code"):
+    #第一个卷积大层
+    with tf.variable_scope("covn1"):
+        covn1_x = tf.reshape(tensor=x, shape=[-1, 80, 20, 3])
+        covn1_w = create_weights(shape=[5, 5, 3, 32])
+        covn1_b = create_weights(shape=[32])
+        covn1 = tf.nn.conv2d(input=covn1_x, filter=covn1_w, strides=[1, 1, 1, 1], padding="SAME") + covn1_b
+        covn1_relu = tf.nn.relu(features=covn1)
+        covn1_poll = tf.nn.max_pool(value=covn1_relu, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding="SAME")
+    with tf.variable_scope("conv2"):
+        covn2_w = create_weights(shape=[5, 5, 3, 64])
+        covn2_b = create_weights(shape=[64])
+        covn2 = tf.nn.conv2d(input=covn1_poll, filter=covn2_w, strides=[1, 1, 1, 1], padding="SAME") + covn2_b
+        covn2_relu = tf.nn.relu(features=covn2)
+        covn2_poll = tf.nn.max_pool(value=covn2_relu, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding="SAME")
+    with tf.variable_scope("qlj"):
+        qlj_x = tf.reshape(tensor=covn2_poll, shape=[-1, 5*20*64])
+        qlj_w = tf.create_weights(shape=[5*20*64, 4*26])
+        qlj_b = tf.create_weights(shape=[104])
+        y_predict = tf.matmul(qlj_x, qlj_w) + qlj_b
+    return y_predict
 
-        return None
+
 if __name__ == "__main__":
 
     filename, image = read_image_data()
     print(filename)
+    #构建模型
+    #构造损失函数
+    error = tf.nn.sigmoid_cross_entropy_with_logits()
+    #优化损失
+    #计算准确率
     with tf.Session() as sess:
         csv_data = read_csv_data()
         coord = tf.train.Coordinator()

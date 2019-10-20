@@ -26,7 +26,7 @@ def full_collection():
         image, label = mnist.train.next_batch(100)
         print("优化之前的损失函数---%s" % sess.run(error, feed_dict={x: image, y_true:label}))
         for i in range(6000):
-            _, loss, avg_new= sess.run([optimizer, error, avg_], feed_dict={x: image, y_true: label})
+            _, loss, avg_new = sess.run([optimizer, error, avg_], feed_dict={x: image, y_true: label})
             print("第%d次优化损失值为---%s--正确率为--%f"% (i+1, loss, avg_new))
     return None
 if __name__=="__main__":
