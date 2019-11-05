@@ -28,6 +28,7 @@ def test():
     #计算准确率
     zql_list = tf.equal(tf.argmax(y_predict, 1), tf.argmax(y, 1))
     zql = tf.reduce_mean(tf.cast(zql_list, tf.float32))
+    Saver = tf.train.Saver()
     with tf.Session() as sess:
         sess.run(init)
         mnist_train_sum = mnist_data.train.num_examples
@@ -37,6 +38,7 @@ def test():
                 sess.run(train_stop, feed_dict={x: branch_value, y: branch_label})
             zql_ = sess.run(zql, feed_dict={x: branch_value, y: branch_label})
             print(zql_)
+
 
 
 if __name__ == "__main__":

@@ -17,6 +17,7 @@ def image_data():
     key, value = reader.read(file_quenue)
     #解码
     image = tf.image.decode_jpeg(value)
+
     print("image", image)
     #图形的形状，类型的修改
     image_resized = tf.image.resize_images(image, [200, 200])

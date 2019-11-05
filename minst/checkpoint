@@ -1,0 +1,2 @@
+model_checkpoint_path: "mnist1.ckpt"
+all_model_checkpoint_paths: "mnist1.ckpt"
